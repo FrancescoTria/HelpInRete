@@ -1,0 +1,26 @@
+/* /* Stili minimi, allineati con src/styles/main.css.
+   Niente colori custom: si usano i token esistenti e classi Bulma. 
+
+   .guida-card {
+    border: 1px solid var(--ui);
+    box-shadow: var(--shadow);
+  }
+  
+  .guida-content h3 {
+    font-size: 1.125rem;  ~18px, leggibile per anziani senza essere enorme 
+    margin: 0.5rem 0 0.75rem;
+  }
+  
+  .guida-content p,
+  .guida-content li {
+    line-height: 1.6;
+  }
+  
+  .guida-content ol {
+    padding-left: 1.25rem;
+  }
+  
+  .guida-content a {
+    text-decoration: underline;
+  }
+   */

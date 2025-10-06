@@ -1,0 +1,610 @@
+/* ────────────────────────────────────────────────────────────────────────
+   FILE: src/styles/main.css
+   Tema chiaro coerente con token colore, navbar sobria, breadcrumb centrato,
+   toolbar accessibilità leggibile, card/form uniformi e modalità Alto Contrasto.
+   ──────────────────────────────────────────────────────────────────────── */
+
+   :root{
+    /* Brand */
+    --primary:#2563EB; --primary-muted:#3A63D1; --primary-vivid:#1E40AF;
+  
+    /* Complementare */
+    --secondary:#7C3AED; --secondary-muted:#8B5CF6; --secondary-vivid:#5B21B6;
+  
+    /* Accento (badge, chip, highlight) */
+    --accent:#F59E0B; --accent-muted:#FBBF24; --accent-vivid:#EA580C;
+  
+    /* Scala neutra chiara */
+    --light:#F7F7F8; --light-muted:#FBFCFD; --light-vivid:#EDEFF2;
+  
+    /* Testo e scuri */
+    --dark:#111827; --dark-muted:#334155; --dark-vivid:#0B1220;
+  
+    /* UI (bordi/hairline) */
+    --ui:#E5E7EB; --ui-muted:#EEF1F4; --ui-vivid:#CBD5E1;
+  
+    /* Testo su superfici colorate sicure per primary/secondary */
+    --on-color:#FFFFFF; --on-light:var(--dark); --on-dark:#FFFFFF;
+  
+    /* Raggi/ombre */
+    --radius-lg:16px; --radius-xl:24px;
+    --shadow-sm:0 4px 12px rgba(17,24,39,.08);
+    --shadow-md:0 12px 28px rgba(17,24,39,.12);
+  
+    /* Forza tema chiaro per controlli nativi */
+    color-scheme: light;
+  }
+  
+  /* Base tipografia e colori */
+  html{ font-size:var(--base-font-size,100%); }
+  body{ background:#0059B3!important; color:var(--on-light)!important; }
+  a{ color:var(--primary); }
+  a:hover{ text-decoration: underline; } /* disattivata localmente in navbar/breadcrumb */
+  
+  .container{ max-width:1080px; }
+  
+  /* Skip link accessibile */
+  .skip-to-content{ position:absolute; left:1rem; top:-40px; z-index:1000; }
+  .skip-to-content:focus{ top:1rem; }
+  
+  /* ========================= NAVBAR ===================================== */
+  .navbar.is-primary{
+    background:var(--light)!important;
+    border-bottom:1px solid var(--ui);
+    position:sticky; top:0; z-index:30;
+    text-decoration: none;
+  }
+  
+  /* Link navbar: no underline, no hover grigio */
+  .navbar .navbar-item, .navbar .navbar-link{
+    color:var(--on-light); font-weight:600; text-decoration:none;
+    border-radius:10px;
+  }
+  .navbar .navbar-item:hover, .navbar .navbar-link:hover{
+    background:transparent; text-decoration:none;
+  }
+  
+  /* Stato active: pill soft coerente col primario */
+  .navbar .navbar-item.is-active{
+    background: color-mix(in srgb, var(--primary), #0059B3);
+    color: white;
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--primary), white 70%);
+  }
+
+  
+  /* Niente hover grigio sulla toolbar */
+  .navbar .navbar-item.a11y-host:hover{ background:transparent !important; }
+  
+  /* ========================= HERO ======================================= */
+  /* Obiettivo:
+     - immagine a destra, intera (no crop), senza zoom forzato
+     - overlay chiaro SOLO sopra l’immagine per aumentare leggibilità
+     Struttura layer:
+     [background image]  -> .home-hero (livello base)
+     [overlay gradient]  -> .home-hero::after (in mezzo)
+     [contenuti testo]   -> .home-hero .hero-body (sopra) */
+  .home-hero{
+    position: relative;
+              /* garantisce layering pulito */
+    color: var(--on-light);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-md);
+    
+  
+    /* Controlli layout immagine e overlay */
+    --hero-img-h: clamp(240px, 44vh, 520px);       /* altezza immagine */
+    --hero-right-pad: clamp(160px, 40vw, 560px);   /* spazio per il testo */
+    --hero-img-offset-y: -32px;                    /* alza l’immagine */
+    --hero-overlay-width: clamp(320px, 60%, 760px);/* larghezza overlay a destra */
+    --hero-overlay-strength: 0.68;                 /* opacità max overlay */
+  
+    /* Solo immagine come background (niente gradient qui) */
+    background-image: url('/home/HeroBG.png');     /* asset in public/ */
+    background-repeat: no-repeat;
+    background-color: white;
+  
+  /* Variabili locali per dimensionare immagine e spazio testo */
+  --hero-img-h: clamp(240px, 44vh, 520px);      /* altezza immagine */
+  --hero-right-pad: clamp(160px, 40vw, 560px);  /* spazio per non sovrapporre il testo */
+  
+  /* Layer 1: gradiente che copre tutto
+     Layer 2: immagine dell’hero a destra, senza crop */
+  background-image:
+      url('/home/HeroBG.png'); /* asset in public/ */
+  background-repeat: no-repeat, no-repeat;
+  
+  /* Il gradiente copre sempre tutto; l’immagine sta “contain” sull’altezza */
+  background-position: center, right 14px center;
+
+  /* Gradiente centrato; immagine ancorata a destra, centrata verticalmente */
+  background-position: bottom -30px right -100px;
+
+  color: var(--on-light);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
+  margin-top: 1rem;
+
+  /* Evita qualsiasi taglio dell’immagine oltre i bordi */
+  overflow: visible;
+}
+  
+  
+  /* Overlay che COPRE bene la parte destra sopra l’immagine */
+  .home-hero::after{
+    content:"";
+    position:absolute;
+    top:0; right:0; bottom:0;
+    width: var(--hero-overlay-width);
+    pointer-events:none;
+    z-index: 0;                       /* tra bg e contenuti */
+    border-top-right-radius: inherit;
+    border-bottom-right-radius: inherit;
+  
+    /* Gradiente più forte sul bordo destro, sfuma verso il testo */
+    background:
+      linear-gradient(
+        90deg,
+        rgba(255,255,255,0) 0%,
+        rgba(255,255,255,calc(var(--hero-overlay-strength)*.55)) 35%,
+        rgba(255,255,255,var(--hero-overlay-strength)) 100%
+      );
+  }
+  
+  /* Contenuti sempre sopra l’overlay */
+  .home-hero .hero-body{
+    position: relative;
+    z-index: 1;
+    padding: 3rem;
+    padding-right: calc(var(--hero-right-pad) + 24px);
+  }
+  .home-hero .title, .home-hero .subtitle{ color:var(--on-light); }
+  
+  /* Mobile: immagine centrata, overlay più stretto e morbido */
+  @media (max-width: 860px){
+    .home-hero{
+      --hero-img-offset-y: -10px;
+      --hero-overlay-width: 85%;
+      background-size: auto clamp(200px, 36vh, 360px);
+      background-position: center calc(100% + var(--hero-img-offset-y));
+    }
+    .home-hero::after{
+      left: 15%; right: 0; width: auto;
+      background:
+        linear-gradient(
+          180deg,
+          rgba(255,255,255,0) 0%,
+          rgba(255,255,255,calc(var(--hero-overlay-strength)*.5)) 45%,
+          rgba(255,255,255,var(--hero-overlay-strength)) 100%
+        );
+    }
+    .home-hero .hero-body{
+      padding: 1.5rem;                 /* niente extra padding a destra su mobile */
+    }
+  }
+  
+  /* ========================= PAGE TITLES ================================= */
+
+  .page-title{
+    color:#FFFFFF !important;
+    letter-spacing:-0.02em;
+  }
+  .page-subtitle{
+    color: rgba(255, 255, 255, 0.849);
+  }
+  
+  /* ========================= CARD ======================================= */
+  .card{
+    background:#fff;
+    border:0px solid var(--ui);
+    border-radius:var(--radius-lg);
+    box-shadow:var(--shadow-sm);
+  }
+  .card:hover{
+    transform:translateY(-2px);
+    box-shadow:var(--shadow-md);
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .card-header{
+    background: var(--light-muted);
+    border-bottom: 1px solid var(--ui);
+    border-top-left-radius:var(--radius-lg);
+    border-top-right-radius:var(--radius-lg);
+  }
+  .card-header-title{ color: var(--dark) !important; font-weight: 700; }
+  
+  /* ========================= BUTTON ===================================== */
+  .button.is-primary{
+    background:var(--primary)!important; border-color:var(--primary)!important; color:var(--on-color)!important;
+    text-decoration: none;
+  }
+  .button.is-primary:hover{ background:var(--primary-muted)!important; border-color:var(--primary-muted)!important; }
+  .button.is-primary:active{ background:var(--primary-vivid)!important; border-color:var(--primary-vivid)!important; }
+  
+  .button.is-link{
+    background:var(--secondary)!important; border-color:var(--secondary)!important; color:var(--on-color)!important;
+  }
+  .button.is-link:hover{ background:var(--secondary-muted)!important; border-color:var(--secondary-muted)!important; }
+  .button.is-link:active{ background:var(--secondary-vivid)!important; border-color:var(--secondary-vivid)!important; }
+  
+  .button.is-light{
+    background:#fff!important;;
+    text-decoration: none;
+
+    color:#0059B3;
+  }
+  
+  /* ========================= TAG / BADGE ================================= */
+  .tag.is-info{
+    background:var(--accent);
+    color:var(--dark);
+    border:1px solid color-mix(in srgb, var(--accent), black 18%);
+  }
+  
+  /* ========================= SEZIONI MORBIDE ============================= */
+  .soft-section{
+    background:var(--light-vivid);
+    border:1px solid var(--ui);
+    border-radius:var(--radius-xl);
+    padding:1.25rem;
+  }
+  
+  /* ========================= FORM / BOX / MESSAGE ======================== */
+  .box{
+    background:#fff;
+    border:1px solid var(--ui);
+    box-shadow:var(--shadow-sm);
+    border-radius:var(--radius-lg);
+  }
+  
+  .input, .select select, .textarea{
+    background:#fff; color:var(--on-light);
+    border:1px solid var(--ui);
+    border-radius:12px;
+  }
+  .input::placeholder, .textarea::placeholder{
+    color: color-mix(in srgb, var(--dark-muted), white 20%);
+  }
+  .input:focus, .select select:focus, .textarea:focus{
+    border-color: color-mix(in srgb, var(--primary), white 10%);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary), white 70%);
+  }
+  
+  .message{
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+  }
+  .message.is-primary .message-header{
+    background: color-mix(in srgb, var(--primary), white 70%);
+    color: var(--dark);
+  }
+  .message.is-primary .message-body{
+    background: color-mix(in srgb, var(--primary), white 90%);
+    color: var(--dark);
+    border-color: color-mix(in srgb, var(--primary), white 75%);
+  }
+  .message.is-info .message-header{
+    background: color-mix(in srgb, var(--secondary), white 70%);
+    color: var(--dark);
+  }
+  .message.is-info .message-body{
+    background: color-mix(in srgb, var(--secondary), white 92%);
+    color: var(--dark);
+    border-color: color-mix(in srgb, var(--secondary), white 75%);
+  }
+  
+  /* ========================= FOCUS RING ================================== */
+  :focus{
+    outline:2px solid transparent;
+    box-shadow:0 0 0 3px color-mix(in srgb, var(--primary), white 45%);
+  }
+  :focus-visible{
+    outline:2px solid transparent;
+    box-shadow:0 0 0 3px color-mix(in srgb, var(--primary), white 45%);
+  }
+  
+  /* ========================= DECORAZIONE SFONDO ========================== */
+  .bg-deco{ position:fixed; inset:0; pointer-events:none; z-index:0; }
+  .bg-deco .blob{
+    position:absolute; width:420px; height:420px; border-radius:999px;
+    filter:blur(30px); opacity:.18;
+  }
+  .bg-deco .blob.blob-1{ top:-120px; right:-60px; background:radial-gradient(closest-side, var(--primary), transparent 70%); }
+  .bg-deco .blob.blob-2{ bottom:-140px; left:-80px; background:radial-gradient(closest-side, var(--secondary), transparent 70%); }
+  
+  /* ========================= BREADCRUMB “PRETTY PILL” ==================== */
+  /* Wrapper centrato davvero */
+  .bc-center{ display:block; }
+  .bc-center .pretty-breadcrumb{ margin-inline:auto; }
+  
+  /* Pill */
+  .pretty-breadcrumb{
+    display:inline-flex; align-items:center; justify-content:center;
+    background:var(--light-muted);
+    border-radius:9999px;
+    padding:.55rem .90rem 10px 2rem;
+    box-shadow:var(--shadow-sm);
+    line-height:1;
+  }
+  /* Lista interna allineata */
+  .pretty-breadcrumb ul{
+    display:flex; align-items:center; justify-content:center;
+    gap:0; margin:0; padding:0;
+  }
+  .pretty-breadcrumb li{ display:flex; align-items:center; margin:0 !important; }
+  
+  /* Link/testo: nessuna underline qui */
+  .pretty-breadcrumb a, .pretty-breadcrumb span{
+    display:inline-flex; align-items:center; text-decoration:none; line-height:1;
+  }
+  .pretty-breadcrumb a:hover{ text-decoration:none !important; color:var(--primary); }
+  .pretty-breadcrumb .is-active span{ font-weight:700; color:var(--dark); }
+  
+  /* Chevron fra elementi, assente quando c'è solo "Home" */
+  .pretty-breadcrumb li + li::before{
+    content:''; display:inline-block; width:.55rem; height:.55rem;
+    border-right:2px solid var(--ui-vivid); border-bottom:2px solid var(--ui-vivid);
+    transform:rotate(-45deg); margin:0 .6rem;
+  }
+  .pretty-breadcrumb li + li{ margin-left:0 !important; }
+  
+  /* ========================= A11Y TOOLBAR ================================ */
+  .a11y-toolbar{
+    display:flex; gap:.5rem; align-items:center;
+    background:var(--light-muted);
+    border:1px solid var(--ui);
+    border-radius:9999px;
+    padding:.35rem .5rem;
+    box-shadow:var(--shadow-sm);
+  }
+  .a11y-toolbar .label{
+    font-size:.75rem; 
+    color:#0059B3;
+    margin:0 .25rem 0 .25rem;
+  }
+
+  .label{
+    color:#0059B3;
+  }
+  
+  /* Switch contrasto */
+  .a11y-switch{
+    position:relative; width:52px; height:28px;
+    background:var(--ui);
+    border:1px solid var(--ui-vivid);
+    border-radius:9999px; cursor:pointer;
+  }
+  .a11y-switch .knob{
+    position:absolute; top:2px; left:2px;
+    width:24px; height:24px; border-radius:50%;
+    background:#fff; box-shadow:var(--shadow-sm);
+    transition:left .2s ease;
+  }
+  .a11y-switch.is-on{ background:var(--primary); border-color:var(--primary-muted); }
+  .a11y-switch.is-on .knob{ left:26px; }
+  
+  /* Stato ON/OFF accanto allo switch, sempre leggibile */
+  .a11y-state{
+    font-size:.75rem; font-weight:700;
+    background:#fff; border:1px solid var(--ui);
+    border-radius:9999px; padding:.15rem .5rem;
+    color:var(--dark);
+  }
+  
+  /* Font size group */
+  .a11y-font{
+    display:flex; align-items:center; gap:.25rem;
+    border-left:1px solid var(--ui);
+    padding-left:.5rem;
+  }
+  .a11y-btn{
+    border:1px solid var(--ui); background:#fff;
+    border-radius:8px; padding:.25rem .5rem;
+    font-weight:700; min-width:34px; line-height:1;
+    box-shadow:var(--shadow-sm);
+    color: var(--dark);
+  }
+  .a11y-btn:hover{ background:var(--light-vivid); }
+  .a11y-display{
+    display:inline-block; min-width:42px; text-align:center; font-weight:700;
+    color: var(--dark);
+  }
+  
+  /* ========================= HIGH CONTRAST (theme-hc) ==================== */
+  .theme-hc body,
+  .theme-hc .section,
+  .theme-hc .box,
+  .theme-hc .card,
+  .theme-hc .message{
+    color:#000!important;
+    background:#fff!important;
+  }
+  
+  /* Navbar in HC */
+  .theme-hc .navbar.is-primary{
+    background:#000!important; border-bottom-color:#000!important;
+  }
+  .theme-hc .navbar .navbar-item, .theme-hc .navbar .navbar-link{ color:#fff!important; }
+  .theme-hc .navbar .navbar-item.is-active{
+    background:#1f1f1f !important; color:#fff !important; box-shadow:none !important;
+  }
+  
+  /* Hero leggibile in HC */
+  .theme-hc .home-hero{ background:#000!important; color:#fff!important; box-shadow:none; }
+  .theme-hc .home-hero::after{ display:none !important; } /* niente overlay in HC */
+  .theme-hc .home-hero .title,
+  .theme-hc .home-hero .subtitle,
+  .theme-hc .home-hero p{ color:#fff !important; }
+  
+  /* Titoli pagina: nero in HC (anche sottotitolo) */
+  .theme-hc .page-title,
+  .theme-hc .page-subtitle{ color:#000 !important; }
+  
+  /* Card & form in HC */
+  .theme-hc .card-header{ background:#fff !important; border-color:#000 !important; }
+  .theme-hc .card-header-title{ color:#000 !important; }
+  .theme-hc .input, .theme-hc .select select, .theme-hc .textarea{
+    background:#fff !important; color:#000 !important; border-color:#000 !important;
+  }
+  
+  /* Message in HC */
+  .theme-hc .message.is-primary .message-header,
+  .theme-hc .message.is-info .message-header{
+    background:#fff !important; color:#000 !important;
+  }
+  .theme-hc .message.is-primary .message-body,
+  .theme-hc .message.is-info .message-body{
+    background:#fff !important; color:#000 !important; border-color:#000 !important;
+  }
+  
+  /* Toolbar in HC: sfondo bianco e testi neri */
+  .theme-hc .a11y-toolbar{ background:#fff !important; border-color:#000 !important; }
+  .theme-hc .a11y-btn{ background:#fff !important; border-color:#000 !important; color:#000 !important; }
+  .theme-hc .a11y-display, .theme-hc .a11y-state{ color:#000 !important; }
+  .theme-hc .a11y-state{ background:#fff !important; border-color:#000 !important; }
+  
+  /* ========================= ACCESSIBILITÀ GENERALE ====================== */
+  @media (prefers-reduced-motion: reduce){
+    *{ transition:none!important; animation:none!important; }
+  }
+  
+  /* Utility */
+  .h-100{ height:100%; }
+  
+  strong{
+    color: #BED0F9;
+  }
+  
+  /* ========================= SITE FOOTER ================================ */
+  .site-footer{
+    margin-top: 3rem;
+    background: linear-gradient(180deg, var(--light-muted), #fff 45%);
+    border-top: 1px solid var(--ui);
+    position: relative;
+    overflow: hidden;
+  }
+  .site-footer::before{
+    /* bagliore morbido in alto a destra */
+    content:"";
+    position:absolute; right:-120px; top:-140px; width:380px; height:380px;
+    background: radial-gradient(closest-side, color-mix(in srgb, var(--secondary), white 65%), transparent 70%);
+    filter: blur(12px); opacity:.5; pointer-events:none;
+  }
+  
+  .site-footer .container{ padding: 2rem 1rem; }
+  .footer-heading{
+    font-size: .85rem; text-transform: uppercase; letter-spacing: .08em;
+    color: var(--dark-muted); margin-bottom: .5rem;
+  }
+  .footer-list{ list-style: none; padding: 0; margin: 0 0 1rem; }
+  .footer-list li + li{ margin-top: .35rem; }
+  
+  .footer-link{
+    color: var(--dark); text-decoration: none; font-weight: 600;
+    border-radius: .5rem; padding: .125rem 0;
+  }
+  .footer-link:hover{ color: var(--primary); text-decoration: underline; }
+  
+  .footer-muted{ color: color-mix(in srgb, var(--dark), white 30%); }
+  
+  .footer-brand .brand-title{
+    font-weight: 800; font-size: 1.1rem; color: var(--dark);
+  }
+  .footer-brand .brand-copy{
+    margin-top: .25rem; color: color-mix(in srgb, var(--dark), white 15%);
+    max-width: 42ch;
+  }
+  
+  .btn-top{
+    display: inline-block;
+    margin-top: .5rem;
+    background: #fff;
+    color: var(--dark);
+    border: 1px solid var(--ui);
+    border-radius: 9999px;
+    padding: .35rem .75rem;
+    font-weight: 700;
+    box-shadow: var(--shadow-sm);
+  }
+  .btn-top:hover{ background: var(--light-vivid); }
+  
+  /* fascia inferiore */
+  .footer-bottom{
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--ui);
+    display: flex; gap: 1rem; align-items: center; justify-content: space-between;
+  }
+  .footer-copy{ color: color-mix(in srgb, var(--dark), white 25%); margin: 0; }
+  .footer-copy.small{ font-size: .875rem; }
+  
+  /* ========================= FOOTER in High Contrast ==================== */
+  .theme-hc .site-footer{
+    background: #000 !important;
+    border-top-color: #000 !important;
+  }
+  .theme-hc .site-footer::before{ display: none; } /* niente bagliori in HC */
+  .theme-hc .footer-heading{ color: #fff !important; }
+  .theme-hc .footer-link{ color: #fff !important; text-decoration: underline; }
+  .theme-hc .footer-muted{ color: #fff !important; }
+  .theme-hc .footer-brand .brand-title,
+  .theme-hc .footer-brand .brand-copy{ color: #fff !important; }
+  .theme-hc .btn-top{
+    background: transparent !important;
+    color: #fff !important;
+    border-color: #fff !important;
+    box-shadow: none !important;
+  }
+  .theme-hc .footer-bottom{
+    border-top-color: #fff !important;
+  }
+  .theme-hc .footer-copy{ color: #fff !important; }
+  
+ /* ----------------------------Guide--------------------------- */
+
+ /* Stili minimi, allineati con src/styles/main.css.
+   Niente colori custom: si usano i token esistenti e classi Bulma. */
+
+   .guida-card {
+    border: 1px solid var(--ui);
+    box-shadow: var(--shadow);
+  }
+  
+  .guida-content h3 {
+    font-size: 1.125rem; /* ~18px, leggibile per anziani senza essere enorme */
+    margin: 0.5rem 0 0.75rem;
+  }
+  
+  .guida-content p,
+  .guida-content li {
+    line-height: 1.6;
+  }
+  
+  .guida-content ol {
+    padding-left: 1.25rem;
+  }
+  
+  .guida-content a {
+    text-decoration: underline;
+  }
+  
+/*-------------------------Altro-------------------------*/
+
+.mb-2 strong{
+  color:#0059B3;
+}
+
+.mt-3 {
+  font-size: 15px;
+}
+
+h3 .title .is-5 .label{
+  color:#0059B3!important;
+}
+
+.mt-3 strong{
+  color:#0059B3;
+}
+
+.mb-1 strong{
+  color:#0059B3;
+}
