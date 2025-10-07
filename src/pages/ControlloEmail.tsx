@@ -8,7 +8,11 @@ import EmailDropzone, {
   type UploadedEmail,
 } from "../components/email/EmailDropzone";
 import EmailPreview from "../components/email/EmailPreview";
+import RiskTestPanel from "../components/email/RiskBadgePanel";
 
+/**
+ * Elenco dei provider supportati per mostrare il tutorial di download.
+ */
 const providers: Provider[] = ["Gmail", "Outlook", "Tiscali", "Yahoo"];
 
 const ControlloEmail: React.FC = () => {
@@ -16,16 +20,17 @@ const ControlloEmail: React.FC = () => {
   const [emails, setEmails] = useState<UploadedEmail[]>([]);
 
   return (
-    <div>
+    <div className="container mt-5">
       <Breadcrumbs />
 
       <h1 className="title is-3 page-title">Controllo email</h1>
       <p className="subtitle is-6 page-subtitle">
         Prima segui il tutorial per scaricare il messaggio, poi carica il file
-        .eml o .msg.
+        <code> .eml</code> o <code>.msg</code>.
       </p>
 
       <div className="box">
+        {/* Selettore provider + tutorial inline */}
         <label className="label" htmlFor="provider">
           Scegli il tuo servizio di posta
         </label>
@@ -48,15 +53,21 @@ const ControlloEmail: React.FC = () => {
           <ProviderTutorial provider={provider} />
         </div>
 
+        {/* Caricamento email */}
         <div className="mt-4">
           <EmailDropzone onFiles={setEmails} />
         </div>
 
+        {/* Anteprima dei file caricati */}
         <div className="mt-4">
           <EmailPreview emails={emails} />
         </div>
 
-        <div className="mt-4">
+        {/* Pannello di test pericolosità */}
+        <RiskTestPanel disabled={!emails.length} />
+
+        {/* Placeholder invio all'AI */}
+        <div className="mt-5">
           <button
             className="button is-success"
             disabled={!emails.length}

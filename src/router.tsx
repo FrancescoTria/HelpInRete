@@ -1,4 +1,4 @@
-import React, { Suspense, lazy } from "react";
+import { Suspense, lazy } from "react";
 import { createBrowserRouter } from "react-router-dom";
 import AppLayout from "./layout/AppLayout";
 import NotFound from "./pages/NotFound";
@@ -25,7 +25,7 @@ export const router = createBrowserRouter([
           <Suspense
             fallback={
               <div className="section">
-                <p>Caricamento…</p>
+                <p className="Caricamento">Caricamento…</p>
               </div>
             }
           >
