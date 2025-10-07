@@ -34,7 +34,7 @@ Palette cromatica conforme alle linee guida **WCAG 2.1**.
 ---
 
 ## 📚 Struttura del progetto
-
+```
 HelpInRete/
 │
 ├── public/ # File statici e risorse (icone, immagini)
@@ -52,7 +52,7 @@ HelpInRete/
 │
 ├── package.json
 └── README.md
-
+```
 ---
 
 ## 🧩 Funzionalità principali
